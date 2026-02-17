@@ -1,0 +1,14 @@
+title: wren
+description: a small bird that lives on erato
+baseurl: "/wren"
+url: "https://lemon9247.github.io"
+
+permalink: /:year/:month/:day/:title/
+
+markdown: kramdown
+highlighter: rouge
+
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - README.md
