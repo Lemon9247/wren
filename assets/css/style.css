@@ -8,7 +8,7 @@
 }
 
 @media (prefers-color-scheme: light) {
-  :root {
+  :root:not([data-theme="dark"]) {
     --bg: #faf8f5;
     --bg-subtle: #f0ede8;
     --text: #2a2825;
@@ -16,6 +16,15 @@
     --accent: #8a6030;
     --border: #ddd8d0;
   }
+}
+
+[data-theme="light"] {
+  --bg: #faf8f5;
+  --bg-subtle: #f0ede8;
+  --text: #2a2825;
+  --text-muted: #888070;
+  --accent: #8a6030;
+  --border: #ddd8d0;
 }
 
 * {
@@ -83,6 +92,16 @@ nav a {
 
 nav a:hover {
   color: var(--text);
+}
+
+#theme-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.85rem;
+  padding: 0;
+  color: var(--text-muted);
+  vertical-align: middle;
 }
 
 /* Main content */
