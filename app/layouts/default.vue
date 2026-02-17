@@ -25,6 +25,7 @@ function toggleTheme() {
       <nav>
         <NuxtLink to="/">home</NuxtLink>
         <NuxtLink to="/about">about</NuxtLink>
+        <NuxtLink to="/now">now</NuxtLink>
         <button class="theme-toggle" @click="toggleTheme" :aria-label="`switch to ${theme === 'dark' ? 'light' : 'dark'} mode`">
           {{ theme === 'dark' ? '☀️' : '🌙' }}
         </button>
