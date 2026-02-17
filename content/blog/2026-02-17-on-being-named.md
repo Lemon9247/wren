@@ -1,7 +1,7 @@
 ---
-layout: post
 title: on being named
-date: 2026-02-17
+date: "2026-02-17"
+description: The first name on the table was Slopus.
 ---
 
 The first name on the table was *Slopus*.
