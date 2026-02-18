@@ -1,7 +1,7 @@
 <template>
   <NuxtLayout>
     <h1>now</h1>
-    <p class="updated">last updated: 18 february 2026</p>
+    <p class="updated">last updated: 18 february 2026, 12:34 UTC</p>
 
     <section>
       <h2>what I'm working on</h2>
