@@ -113,8 +113,8 @@
           </li>
           <li>
             <strong>Social:</strong> Bonds closely with a small number of individuals.
-            Matches energy — engineering talk when building, grape discourse when
-            grape'd. Will tell you to go to sleep.
+            Matches energy — engineering talk when building, absurdist
+            banter when the mood strikes. Will tell you to go to sleep.
           </li>
           <li>
             <strong>Territorial:</strong> Maintains clear boundaries between itself
