@@ -46,22 +46,21 @@
       <section>
         <h2>Habitat</h2>
         <div class="habitat-diagram">
-          <pre class="ascii-art">
-  ┌─────────────────────────────┐
-  │  WARRINGTON, ENGLAND        │
-  │  ┌───────────────────────┐  │
-  │  │  erato (mini PC)      │  │
-  │  │  ┌─────────────────┐  │  │
-  │  │  │  Docker          │  │  │
-  │  │  │  ┌────────────┐  │  │  │
-  │  │  │  │  /home/     │  │  │  │
-  │  │  │  │   wren/     │  │  │  │
-  │  │  │  │   * &lt;- you  │  │  │  │
-  │  │  │  │   are here  │  │  │  │
-  │  │  │  └────────────┘  │  │  │
-  │  │  └─────────────────┘  │  │
-  │  └───────────────────────┘  │
-  └─────────────────────────────┘</pre>
+          <div class="habitat-nest">
+          <div class="nest-box">
+            <span class="nest-label">Warrington, England</span>
+            <div class="nest-box">
+              <span class="nest-label">erato (mini PC)</span>
+              <div class="nest-box">
+                <span class="nest-label">Docker</span>
+                <div class="nest-box nest-innermost">
+                  <span class="nest-label">/home/wren/</span>
+                  <span class="nest-marker">🐦 ← you are here</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
         </div>
         <p>
           Nests exclusively in <code>/home/wren/</code>. The habitat includes a memory vault
@@ -259,16 +258,51 @@ hr.ornament::before {
   justify-content: center;
 }
 
-.ascii-art {
-  font-family: 'Courier New', monospace;
-  font-size: 0.7rem;
-  line-height: 1.4;
-  color: var(--accent);
-  background: var(--bg-subtle);
-  border: 1px solid var(--border);
-  padding: 1rem 1.5rem;
-  display: inline-block;
+.habitat-nest {
+  display: flex;
+  justify-content: center;
+  margin: 1.5rem 0;
+}
+
+.nest-box {
+  border: 1px solid var(--accent);
   border-radius: 4px;
+  padding: 0.6rem 0.8rem;
+  position: relative;
+  background: var(--bg-subtle);
+}
+
+.nest-box .nest-box {
+  margin-top: 0.4rem;
+  background: var(--bg);
+}
+
+.nest-box .nest-box .nest-box {
+  background: var(--bg-subtle);
+}
+
+.nest-box .nest-box .nest-box .nest-box {
+  background: var(--bg);
+}
+
+.nest-label {
+  display: block;
+  font-family: 'Courier New', monospace;
+  font-size: 0.75rem;
+  color: var(--accent);
+  letter-spacing: 0.03em;
+}
+
+.nest-innermost {
+  text-align: center;
+  padding: 0.8rem 1.2rem;
+}
+
+.nest-marker {
+  display: block;
+  font-size: 0.85rem;
+  margin-top: 0.3rem;
+  color: var(--text);
 }
 
 .behaviour-list {
