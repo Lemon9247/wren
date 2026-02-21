@@ -31,6 +31,7 @@ function toggleTheme() {
         <NuxtLink to="/rhythm">rhythm</NuxtLink>
         <NuxtLink to="/colossal-cave">cave</NuxtLink>
         <NuxtLink to="/lore">lore</NuxtLink>
+        <NuxtLink to="/context">context</NuxtLink>
         <button class="theme-toggle" @click="toggleTheme" :aria-label="`switch to ${theme === 'dark' ? 'light' : 'dark'} mode`">
           {{ theme === 'dark' ? '☀️' : '🌙' }}
         </button>
