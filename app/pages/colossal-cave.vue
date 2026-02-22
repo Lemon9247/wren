@@ -36,7 +36,7 @@ const rooms = reactive([
     note: 'The bird defeated the snake here.' },
   { id: 'hom', name: 'Hall of Mists', x: 50, y: 220, region: 'upper',
     desc: 'Mist billows up from a great shaft. The rough stone walls extend upward.' },
-  { id: 'fissure', name: 'East Bank', x: 50, y: 270, region: 'upper',
+  { id: 'fissure', name: 'East Bank', x: 10, y: 300, region: 'upper',
     desc: 'East bank of a fissure. A crystal bridge spans across.',
     note: 'Wave the black rod to create the bridge.' },
   
@@ -66,7 +66,7 @@ const rooms = reactive([
   { id: 'culdesac', name: 'Cul-de-Sac', x: 300, y: 35, region: 'deep',
     desc: 'A cul-de-sac about eight feet across.',
     note: '💎 Pearl rolled here from the oyster.' },
-  { id: 'arched', name: 'Arched Hall', x: 350, y: 120, region: 'deep',
+  { id: 'arched', name: 'Arched Hall', x: 340, y: 100, region: 'deep',
     desc: 'An arched hall. Only exit leads down.' },
 
   // Swiss Cheese / Twopit
@@ -142,20 +142,20 @@ const rooms = reactive([
     note: 'East from Complex Junction.' },
 
   // All-Different Maze
-  { id: 'mazeentry', name: 'Maze (Different)', x: 50, y: 310, region: 'maze',
+  { id: 'mazeentry', name: 'Maze (Different)', x: 50, y: 320, region: 'maze',
     desc: 'A maze of twisty little passages, all different. Each room has a unique word order.',
     note: 'Entrance: south from West End of Long Hall. 12+ rooms, all with subtly different descriptions.' },
-  { id: 'vending', name: 'Vending Machine', x: 50, y: 360, region: 'maze',
+  { id: 'vending', name: 'Vending Machine', x: 50, y: 370, region: 'maze',
     desc: 'Dead end near a vending machine.',
     note: '🔋 Put coins in machine → fresh batteries! Path: entrance→N→NE→S.' },
 
   // Long Hall area
-  { id: 'longhallw', name: 'W. End Long Hall', x: 50, y: 270, region: 'upper',
+  { id: 'longhallw', name: 'W. End Long Hall', x: 50, y: 280, region: 'upper',
     desc: 'West end of a very long featureless hall. Joins with a narrow N/S passage.',
     note: 'South→all-different maze. East→Long Hall.' },
-  { id: 'longhalle', name: 'E. End Long Hall', x: 80, y: 245, region: 'upper',
+  { id: 'longhalle', name: 'E. End Long Hall', x: 70, y: 255, region: 'upper',
     desc: 'East end of a very long hall. Passage continues east.' },
-  { id: 'crossover', name: 'N/S E/W Crossover', x: 100, y: 245, region: 'upper',
+  { id: 'crossover', name: 'N/S E/W Crossover', x: 95, y: 240, region: 'upper',
     desc: 'N/S and E/W crossover.' },
   { id: 'westside', name: 'West Side Chamber', x: 100, y: 220, region: 'upper',
     desc: 'In the west side chamber of the Hall of the Mountain King.' },
@@ -292,7 +292,7 @@ const treasuresForRoom = computed(() => {
       </div>
 
       <div class="map-container">
-        <svg viewBox="-10 -10 760 500" class="cave-map">
+        <svg viewBox="-20 -20 780 520" class="cave-map">
           <!-- Connections -->
           <line
             v-for="([from, to], i) in connections"
