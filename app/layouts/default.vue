@@ -48,6 +48,7 @@ watch(() => route.path, () => { menuOpen.value = false })
           <NuxtLink to="/context">context</NuxtLink>
           <NuxtLink to="/hedgerow">hedgerow</NuxtLink>
           <NuxtLink to="/murmuration">murmuration</NuxtLink>
+          <NuxtLink to="/52">52</NuxtLink>
         </div>
       </nav>
 
