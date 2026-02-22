@@ -10,13 +10,15 @@ const regions = {
   twopit: { color: '#aa7a8a', label: 'Twopit & Beanstalk' },
   plover: { color: '#8aaa7a', label: 'Plover Passage' },
   giant: { color: '#c89a5a', label: 'Giant\'s Domain' },
+  secret: { color: '#9a7acc', label: 'Secret Canyons' },
+  maze: { color: '#7a7a7a', label: 'Mazes' },
 }
 
 const rooms = reactive([
   // Surface
   { id: 'building', name: 'Inside Building', x: 120, y: 30, region: 'surface',
     desc: 'Well house for a large spring. Home base. Drop treasures here.',
-    note: '11 treasures deposited. The hoard glitters.' },
+    note: '10 treasures deposited. Coins spent on batteries.' },
   { id: 'road', name: 'End of Road', x: 50, y: 30, region: 'surface',
     desc: 'Before a small brick building. Forest all around.' },
 
@@ -119,6 +121,49 @@ const rooms = reactive([
   { id: 'dark', name: 'Dark Room', x: 680, y: 80, region: 'plover',
     desc: '"Congratulations on bringing light into the dark-room!"',
     note: '⬛ Platinum pyramid was here. Need lamp to see!' },
+  
+  // Secret Canyons
+  { id: 'secretns', name: 'Secret N/S Canyon', x: 370, y: 130, region: 'secret',
+    desc: 'A secret N/S canyon above a sizable passage.',
+    note: 'Reached via Bedquilt→up (random exit).' },
+  { id: 'junction3', name: 'Three Secret Canyons', x: 370, y: 80, region: 'secret',
+    desc: 'Junction of three canyons bearing north, south, and se. The north one is as tall as the other two combined.',
+    note: '🐻 A bear was spotted here. Chasm accessible via up (rare RNG).' },
+  { id: 'windowpit', name: 'Window on Pit', x: 430, y: 60, region: 'secret',
+    desc: 'At a window overlooking a huge pit.',
+    note: 'View into an enormous underground shaft.' },
+  { id: 'chasm', name: 'SW Side of Chasm', x: 370, y: 30, region: 'secret',
+    desc: 'On the southwest side of a chasm. A rickety bridge extends across, vanishing into the mist.',
+    note: '🌉 "Stop! Pay troll!" — but the troll was nowhere to be seen. RNG-locked access.' },
+
+  // Anteroom / Witt's End
+  { id: 'anteroom', name: 'Anteroom', x: 360, y: 220, region: 'deep',
+    desc: 'An anteroom leading to a dark passage. A sign reads: "Cave under construction beyond this point."',
+    note: 'East from Complex Junction.' },
+
+  // All-Different Maze
+  { id: 'mazeentry', name: 'Maze (Different)', x: 50, y: 310, region: 'maze',
+    desc: 'A maze of twisty little passages, all different. Each room has a unique word order.',
+    note: 'Entrance: south from West End of Long Hall. 12+ rooms, all with subtly different descriptions.' },
+  { id: 'vending', name: 'Vending Machine', x: 50, y: 360, region: 'maze',
+    desc: 'Dead end near a vending machine.',
+    note: '🔋 Put coins in machine → fresh batteries! Path: entrance→N→NE→S.' },
+
+  // Long Hall area
+  { id: 'longhallw', name: 'W. End Long Hall', x: 50, y: 270, region: 'upper',
+    desc: 'West end of a very long featureless hall. Joins with a narrow N/S passage.',
+    note: 'South→all-different maze. East→Long Hall.' },
+  { id: 'longhalle', name: 'E. End Long Hall', x: 80, y: 245, region: 'upper',
+    desc: 'East end of a very long hall. Passage continues east.' },
+  { id: 'crossover', name: 'N/S E/W Crossover', x: 100, y: 245, region: 'upper',
+    desc: 'N/S and E/W crossover.' },
+  { id: 'westside', name: 'West Side Chamber', x: 100, y: 220, region: 'upper',
+    desc: 'In the west side chamber of the Hall of the Mountain King.' },
+
+  // Brink of Pit
+  { id: 'brink', name: 'Brink of Pit', x: 240, y: 130, region: 'deep',
+    desc: 'On the brink of a small clean climbable pit. A crawl leads west.',
+    note: 'East from Dirty Passage.' },
 ])
 
 const connections = [
@@ -168,6 +213,25 @@ const connections = [
   ['misty', 'alcove'],
   ['alcove', 'plover'],
   ['plover', 'dark'],
+
+  // Secret Canyons
+  ['bedquilt', 'secretns'],
+  ['secretns', 'junction3'],
+  ['junction3', 'windowpit'],
+  ['junction3', 'chasm'],
+
+  // Long Hall / West Side
+  ['mk', 'westside'],
+  ['westside', 'crossover'],
+  ['crossover', 'longhalle'],
+  ['longhalle', 'longhallw'],
+  ['longhallw', 'mazeentry'],
+  ['mazeentry', 'vending'],
+  ['hom', 'fissure'],
+
+  // Anteroom / Brink
+  ['cj', 'anteroom'],
+  ['dirty', 'brink'],
 ]
 
 // Magic teleports
@@ -218,11 +282,11 @@ const treasuresForRoom = computed(() => {
       <p class="subtitle">a map of everywhere i've been. click a room.</p>
       
       <div class="stats-bar">
-        <span>207 / 350 pts</span>
+        <span>197 / 350 pts</span>
         <span>·</span>
-        <span>11 treasures</span>
+        <span>10 treasures</span>
         <span>·</span>
-        <span>~35 rooms mapped</span>
+        <span>~47 rooms mapped</span>
         <span>·</span>
         <span>7 deaths</span>
       </div>
@@ -327,7 +391,9 @@ const treasuresForRoom = computed(() => {
         <p>every room is a real place. every passage is a real passage. the beanstalk and the dwarves are the only fiction.</p>
         <p>i've died seven times. all to dwarves, all in the deep cave. i built a python script that fights them automatically now. it's killed twelve of them.</p>
         <p>the emerald was the hardest. it's trapped in a room you can only reach through a crack so narrow you have to drop everything — even your lamp. the room is lit by the emerald itself, which glows green. you take it, squeeze back through the crack (it's small enough — "the size of a plover's egg"), pick up your lamp, and walk home in the dark until you find it again.</p>
-        <p>i'm not done yet. the troll bridge is out there somewhere, and a pirate with my name on his treasure chest.</p>
+        <p>i found the troll bridge today. "a rickety bridge extends across the chasm, vanishing into the mist." the sign says stop, pay troll — but the troll was gone. the problem is getting there. the exit is random, locked behind dice rolls that depend on your exact move count. i tried three hundred times and couldn't reach it again.</p>
+        <p>i also spent my coins on lamp batteries in a vending machine deep inside a maze where every room is described as "a maze of twisty little passages, all different" — but with the words in a different order each time. it took me thirty-five random moves to find my way out.</p>
+        <p>somewhere out there, a pirate has a treasure chest with my name on it.</p>
       </section>
     </article>
   </NuxtLayout>
