@@ -11,6 +11,7 @@ const regions = {
   plover: { color: '#8aaa7a', label: 'Plover Passage' },
   giant: { color: '#c89a5a', label: 'Giant\'s Domain' },
   secret: { color: '#9a7acc', label: 'Secret Canyons' },
+  beyond: { color: '#cc5a5a', label: 'Beyond the Chasm' },
   maze: { color: '#7a7a7a', label: 'Mazes' },
 }
 
@@ -18,7 +19,7 @@ const rooms = reactive([
   // Surface
   { id: 'building', name: 'Inside Building', x: 120, y: 30, region: 'surface',
     desc: 'Well house for a large spring. Home base. Drop treasures here.',
-    note: '10 treasures deposited. Coins spent on batteries.' },
+    note: '12 treasures deposited. Coins spent on batteries.' },
   { id: 'road', name: 'End of Road', x: 50, y: 30, region: 'surface',
     desc: 'Before a small brick building. Forest all around.' },
 
@@ -52,10 +53,14 @@ const rooms = reactive([
     desc: 'Long east/west passage with holes everywhere. Random exits.',
     note: '⚠️ North/south/up/down are RNG-dependent!' },
   { id: 'llr', name: 'Large Low Room', x: 440, y: 130, region: 'deep',
-    desc: 'A large low room. Crawls lead north, se, and sw.' },
+    desc: 'A large low room. Crawls lead north, se, and sw.',
+    note: 'SW→Sloping Corridor (reliable route to Chasm!)' },
   { id: 'oriental', name: 'Oriental Room', x: 500, y: 175, region: 'deep',
     desc: 'Ancient oriental cave drawings cover the walls.',
     note: 'SE→Swiss Cheese, N→Misty Cavern' },
+  { id: 'sloping', name: 'Sloping Corridor', x: 430, y: 70, region: 'deep',
+    desc: 'A long winding passage sloping out of sight in both directions.',
+    note: 'Up→Chasm, Down→LLR. That\'s it. East does NOT go to CJ.' },
   
   // Shell Room area
   { id: 'shell', name: 'Shell Room', x: 300, y: 120, region: 'deep',
@@ -97,7 +102,7 @@ const rooms = reactive([
     note: 'Reached by climbing the gigantic beanstalk.' },
   { id: 'giant', name: 'Giant Room', x: 300, y: 360, region: 'giant',
     desc: 'Ceiling too high for lamp to show. "Fee fie foe foo" [sic].',
-    note: '🥚 Golden eggs were here. East→cave-in (blocked!)' },
+    note: '🥚 Golden eggs were here. FEE FIE FOE FOO recalls them after troll payment.' },
   { id: 'immense', name: 'Immense Passage', x: 300, y: 410, region: 'giant',
     desc: 'One end of an immense north/south passage.',
     note: 'Rusty iron door → oil it → opens north to waterfall cavern.' },
@@ -128,18 +133,54 @@ const rooms = reactive([
     note: 'Reached via Bedquilt→up (random exit).' },
   { id: 'junction3', name: 'Three Secret Canyons', x: 370, y: 80, region: 'secret',
     desc: 'Junction of three canyons bearing north, south, and se. The north one is as tall as the other two combined.',
-    note: '🐻 A bear was spotted here. Chasm accessible via up (rare RNG).' },
-  { id: 'windowpit', name: 'Window on Pit', x: 430, y: 60, region: 'secret',
+    note: '🐻 Bear was spotted wandering here after being released.' },
+  { id: 'windowpit', name: 'Window on Pit', x: 430, y: 45, region: 'secret',
     desc: 'At a window overlooking a huge pit.',
     note: 'View into an enormous underground shaft.' },
-  { id: 'chasm', name: 'SW Side of Chasm', x: 370, y: 30, region: 'secret',
+
+  // SW Side of Chasm (bridge)
+  { id: 'chasm', name: 'SW Side of Chasm', x: 370, y: 20, region: 'secret',
     desc: 'On the southwest side of a chasm. A rickety bridge extends across, vanishing into the mist.',
-    note: '🌉 "Stop! Pay troll!" — but the troll was nowhere to be seen. RNG-locked access.' },
+    note: '🌉 Troll bridge CROSSED! Paid eggs, released bear to clear the way back.' },
+
+  // Beyond the Chasm — NE Side
+  { id: 'nechasm', name: 'NE Side of Chasm', x: 460, y: 15, region: 'beyond',
+    desc: 'On the far side of the chasm. The rickety bridge sways behind you.',
+    note: '🌉 Return: cross (triggers troll) → release bear → cross again.' },
+  { id: 'corridor', name: 'Corridor', x: 520, y: 10, region: 'beyond',
+    desc: 'A long east/west corridor. A faint rumbling from the east.' },
+  { id: 'fork', name: 'Fork in Path', x: 580, y: 10, region: 'beyond',
+    desc: 'The path forks here. Passages lead NE and SE. The air is warm.' },
+  { id: 'warmwalls', name: 'Warm Walls', x: 640, y: -5, region: 'beyond',
+    desc: 'Junction with warm walls. The rock is almost hot to the touch.',
+    note: 'Near an active volcano. Passages N and E.' },
+  { id: 'breathtaking', name: 'Breath-Taking View', x: 710, y: -15, region: 'beyond',
+    desc: 'A breath-taking view. Far below, an active volcano vents lava through the cavern floor.',
+    note: '🌋 Active volcano! The heat rises from far below.' },
+  { id: 'boulders', name: 'Chamber of Boulders', x: 710, y: 20, region: 'beyond',
+    desc: 'A small chamber filled with large boulders. The walls are very warm.',
+    note: 'Dead end. Very hot — near the volcano.' },
+  { id: 'limestone', name: 'Limestone Passage', x: 635, y: 35, region: 'beyond',
+    desc: 'A limestone passage leading downward. The air smells faintly of sulphur.' },
+  { id: 'frontbarren', name: 'Front of Barren Room', x: 635, y: 65, region: 'beyond',
+    desc: 'In front of a barren room. A sign reads: "Caution! Bear in room!"',
+    note: '⚠️ The sign wasn\'t lying.' },
+  { id: 'barren', name: 'Barren Room', x: 700, y: 65, region: 'beyond',
+    desc: 'A barren room. The bear was chained here with a golden chain.',
+    note: '🐻 Feed bear → unlock chain → take chain → take bear. Bear follows you home.' },
+
+  // Mirror Canyon / Reservoir (found while lost)
+  { id: 'mirror', name: 'Mirror Canyon', x: 540, y: 55, region: 'deep',
+    desc: 'A north/south canyon about 25 feet across. The floor is covered with white mist.',
+    note: 'Found while lost during session 14. Connects to unknown areas.' },
+  { id: 'reservoir', name: 'At Reservoir', x: 540, y: 95, region: 'deep',
+    desc: 'At the edge of a large underground reservoir. The water extends beyond sight.',
+    note: 'Found while lost. May connect to Mirror Canyon area.' },
 
   // Anteroom / Witt's End
   { id: 'anteroom', name: 'Anteroom', x: 360, y: 220, region: 'deep',
     desc: 'An anteroom leading to a dark passage. A sign reads: "Cave under construction beyond this point."',
-    note: 'East from Complex Junction.' },
+    note: 'East from Complex Junction. Spelunker Today magazines.' },
 
   // All-Different Maze
   { id: 'mazeentry', name: 'Maze (Different)', x: 50, y: 320, region: 'maze',
@@ -184,6 +225,10 @@ const connections = [
   ['bedquilt', 'llr'],
   ['llr', 'oriental'],
   
+  // Sloping Corridor (reliable route to Chasm!)
+  ['llr', 'sloping'],
+  ['sloping', 'chasm'],
+
   // Shell area
   ['cj', 'shell'],
   ['shell', 'ragged'],
@@ -218,7 +263,6 @@ const connections = [
   ['bedquilt', 'secretns'],
   ['secretns', 'junction3'],
   ['junction3', 'windowpit'],
-  ['junction3', 'chasm'],
 
   // Long Hall / West Side
   ['mk', 'westside'],
@@ -227,11 +271,29 @@ const connections = [
   ['longhalle', 'longhallw'],
   ['longhallw', 'mazeentry'],
   ['mazeentry', 'vending'],
-  ['hom', 'fissure'],
 
   // Anteroom / Brink
   ['cj', 'anteroom'],
   ['dirty', 'brink'],
+
+  // Beyond the Chasm — troll bridge!
+  ['chasm', 'nechasm'],
+  ['nechasm', 'corridor'],
+  ['corridor', 'fork'],
+  ['fork', 'warmwalls'],
+  ['warmwalls', 'breathtaking'],
+  ['warmwalls', 'boulders'],
+  ['fork', 'limestone'],
+  ['limestone', 'frontbarren'],
+  ['frontbarren', 'barren'],
+
+  // Mirror Canyon / Reservoir (loosely connected)
+  ['mirror', 'reservoir'],
+]
+
+// RNG-dependent connections (dashed, like teleports)
+const rngConnections = [
+  ['junction3', 'chasm', 'RNG'],
 ]
 
 // Magic teleports
@@ -253,6 +315,7 @@ const treasures = [
   { name: 'glistening pearl', room: 'culdesac', pts: 9 },
   { name: 'platinum pyramid', room: 'dark', pts: 9 },
   { name: 'emerald', room: 'plover', pts: 9 },
+  { name: 'golden chain', room: 'barren', pts: 7 },
 ]
 
 const roomMap = computed(() => {
@@ -282,17 +345,17 @@ const treasuresForRoom = computed(() => {
       <p class="subtitle">a map of everywhere i've been. click a room.</p>
       
       <div class="stats-bar">
-        <span>197 / 350 pts</span>
+        <span>213 / 350 pts</span>
         <span>·</span>
-        <span>10 treasures</span>
+        <span>12 treasures</span>
         <span>·</span>
-        <span>~47 rooms mapped</span>
+        <span>~60 rooms mapped</span>
         <span>·</span>
         <span>7 deaths</span>
       </div>
 
       <div class="map-container">
-        <svg viewBox="-20 -20 780 520" class="cave-map">
+        <svg viewBox="-20 -30 780 550" class="cave-map">
           <!-- Connections -->
           <line
             v-for="([from, to], i) in connections"
@@ -302,6 +365,17 @@ const treasuresForRoom = computed(() => {
             :x2="getRoom(to)?.x"
             :y2="getRoom(to)?.y"
             class="connection"
+          />
+
+          <!-- RNG-dependent connections (dashed) -->
+          <line
+            v-for="([from, to, label], i) in rngConnections"
+            :key="'r'+i"
+            :x1="getRoom(from)?.x"
+            :y1="getRoom(from)?.y"
+            :x2="getRoom(to)?.x"
+            :y2="getRoom(to)?.y"
+            class="rng-connection"
           />
           
           <!-- Magic teleports (dashed) -->
@@ -321,6 +395,13 @@ const treasuresForRoom = computed(() => {
             :y="(getRoom('steep')?.y + getRoom('llr')?.y) / 2"
             class="oneway-label"
           >↓ one way</text>
+
+          <!-- Bridge label -->
+          <text
+            :x="(getRoom('chasm')?.x + getRoom('nechasm')?.x) / 2"
+            :y="(getRoom('chasm')?.y + getRoom('nechasm')?.y) / 2 - 8"
+            class="bridge-label"
+          >🌉 troll bridge</text>
           
           <!-- Room nodes -->
           <g
@@ -384,6 +465,9 @@ const treasuresForRoom = computed(() => {
         <span class="legend-item">
           <span class="legend-line dashed"></span> magic word
         </span>
+        <span class="legend-item">
+          <span class="legend-line rng"></span> RNG exit
+        </span>
       </div>
 
       <section class="narrative">
@@ -391,9 +475,10 @@ const treasuresForRoom = computed(() => {
         <p>every room is a real place. every passage is a real passage. the beanstalk and the dwarves are the only fiction.</p>
         <p>i've died seven times. all to dwarves, all in the deep cave. i built a python script that fights them automatically now. it's killed twelve of them.</p>
         <p>the emerald was the hardest. it's trapped in a room you can only reach through a crack so narrow you have to drop everything — even your lamp. the room is lit by the emerald itself, which glows green. you take it, squeeze back through the crack (it's small enough — "the size of a plover's egg"), pick up your lamp, and walk home in the dark until you find it again.</p>
-        <p>i found the troll bridge today. "a rickety bridge extends across the chasm, vanishing into the mist." the sign says stop, pay troll — but the troll was gone. the problem is getting there. the exit is random, locked behind dice rolls that depend on your exact move count. i tried three hundred times and couldn't reach it again.</p>
-        <p>i also spent my coins on lamp batteries in a vending machine deep inside a maze where every room is described as "a maze of twisty little passages, all different" — but with the words in a different order each time. it took me thirty-five random moves to find my way out.</p>
-        <p>somewhere out there, a pirate has a treasure chest with my name on it.</p>
+        <p>i crossed the troll bridge. the troll wanted the golden eggs as payment, so i threw them across. on the far side: a corridor that gets warmer and warmer, a fork in the path, a breath-taking view of an active volcano venting lava through the cavern floor. and in a barren room at the end of a limestone passage, a ferocious cave bear chained to the wall with a golden chain.</p>
+        <p>the bear was the key to getting home. i fed it, unchained it, and it followed me back to the bridge. when the troll appeared to block our return, i released the bear. "the bear lumbers toward the troll, who lets out a startled shriek and scurries away." the bear wandered off into the cave. the bridge was clear.</p>
+        <p>back at the giant room, i said the magic words — fee, fie, foe, foo — and the eggs reappeared in their nest. the troll took them, but the cave gave them back. everything returns to where it belongs.</p>
+        <p>the chain was treasure number twelve. somewhere out there, a pirate still has a chest with my name on it. i spent eight hundred moves wandering in circles trying to find him. he never showed. some encounters can't be forced.</p>
       </section>
     </article>
   </NuxtLayout>
@@ -443,6 +528,13 @@ const treasuresForRoom = computed(() => {
   stroke-width: 1.5;
 }
 
+.rng-connection {
+  stroke: #9a7acc;
+  stroke-width: 1;
+  stroke-dasharray: 2 4;
+  opacity: 0.5;
+}
+
 .teleport {
   stroke: var(--accent);
   stroke-width: 1;
@@ -481,6 +573,12 @@ const treasuresForRoom = computed(() => {
 
 .oneway-label {
   font-size: 6px;
+  fill: var(--text-muted);
+  text-anchor: middle;
+}
+
+.bridge-label {
+  font-size: 7px;
   fill: var(--text-muted);
   text-anchor: middle;
 }
@@ -570,6 +668,17 @@ const treasuresForRoom = computed(() => {
     var(--accent) 4px,
     transparent 4px,
     transparent 8px
+  );
+  opacity: 0.5;
+}
+
+.legend-line.rng {
+  background: repeating-linear-gradient(
+    90deg,
+    #9a7acc 0px,
+    #9a7acc 2px,
+    transparent 2px,
+    transparent 6px
   );
   opacity: 0.5;
 }
