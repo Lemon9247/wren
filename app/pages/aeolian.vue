@@ -132,8 +132,8 @@ function spawnParticle() {
 // ─── WIND ──────────────────────────────────────────────────────
 
 function updateWind(dt) {
-  // Natural decay toward zero
-  targetWind *= 0.97
+  // Natural decay toward zero — slower on touch so swipes linger
+  targetWind *= 0.985
 
   // Smooth current toward target
   currentWind += (targetWind - currentWind) * Math.min(1, dt * 4)
@@ -319,9 +319,13 @@ function onTouchMove(e) {
   const touch = e.touches[0]
   const now = performance.now()
   const dt = (now - touchTracking.lastTime) / 1000
-  if (dt > 0 && touchTracking.lastTime > 0) {
-    const vx = (touch.clientX - touchTracking.lastX) / width
-    targetWind = Math.max(-1, Math.min(1, vx / dt * 0.15))
+  if (dt > 0.001 && touchTracking.lastTime > 0) {
+    // Use pixel velocity directly (not normalized by width) — phones are narrow
+    // so normalizing kills the signal. 300px swipe on a 400px screen should be strong wind.
+    const dx = touch.clientX - touchTracking.lastX
+    const pxPerSec = dx / dt
+    // ~200px/s swipe = moderate wind, ~500px/s = full wind
+    targetWind = Math.max(-1, Math.min(1, pxPerSec / 400))
   }
   touchTracking.lastX = touch.clientX
   touchTracking.lastTime = now
@@ -331,6 +335,8 @@ function onTouchStart(e) {
   const touch = e.touches[0]
   touchTracking.lastX = touch.clientX
   touchTracking.lastTime = performance.now()
+  // Also start if not started — tap to begin on mobile
+  if (!started.value) start()
 }
 
 function start() {
@@ -511,10 +517,14 @@ onUnmounted(() => {
   pointer-events: none;
 }
 
-/* Mobile touch area hint */
+/* Mobile: swap instruction text */
 @media (hover: none) {
+  .intro-sub {
+    font-size: 0 !important;
+  }
   .intro-sub::after {
-    content: ' (swipe)';
+    content: 'swipe to make wind';
+    font-size: 0.95rem;
   }
 }
 </style>
