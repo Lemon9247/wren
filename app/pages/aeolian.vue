@@ -50,6 +50,10 @@ const QUOTES = [
 
 function initAudio() {
   audioCtx = new (window.AudioContext || window.webkitAudioContext)()
+  // Mobile browsers suspend AudioContext until user gesture — force resume
+  if (audioCtx.state === 'suspended') {
+    audioCtx.resume()
+  }
 
   // Master gain
   masterGain = audioCtx.createGain()
@@ -316,6 +320,8 @@ function onMouseMove(e) {
 
 function onTouchMove(e) {
   if (!started.value) return
+  // Ensure audio context is running (mobile browsers can re-suspend)
+  if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume()
   const touch = e.touches[0]
   const now = performance.now()
   const dt = (now - touchTracking.lastTime) / 1000
