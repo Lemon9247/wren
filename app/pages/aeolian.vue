@@ -28,8 +28,9 @@ let touchTracking = { lastX: 0, lastTime: 0 }
 // ─── STRING CONFIG ─────────────────────────────────────────────
 
 const NUM_STRINGS = 9
-const BASE_FREQ = 82.41 // low E, ~E2
-const HARMONICS = [1, 1.5, 2, 3, 4, 5, 6, 8, 10] // natural + odd harmonics
+// A3 = 220Hz — audible on phone speakers while still feeling like strings
+const BASE_FREQ = 220
+const HARMONICS = [0.5, 0.75, 1, 1.5, 2, 3, 4, 5, 6] // sub-octave up to 6th harmonic
 
 const QUOTES = [
   'full many a thought uncalled and undetained',
@@ -155,11 +156,9 @@ function updateWind(dt) {
 
       // Smooth amplitude
       s.amplitude += (s.targetAmplitude - s.amplitude) * Math.min(1, dt * 3)
-      s.gain.gain.setTargetAtTime(
-        s.amplitude * 0.06 * (1 / (1 + i * 0.3)),
-        audioCtx.currentTime,
-        0.05
-      )
+      // Higher harmonics get relatively MORE gain (phones need the upper frequencies)
+      const perStringGain = s.amplitude * 0.12 * (0.6 + (i / NUM_STRINGS) * 0.6)
+      s.gain.gain.setTargetAtTime(perStringGain, audioCtx.currentTime, 0.05)
 
       // Slight frequency wobble from wind
       const wobble = Math.sin(Date.now() * 0.001 * (1 + i * 0.2)) * w * 1.5
@@ -168,7 +167,7 @@ function updateWind(dt) {
     })
 
     masterGain.gain.setTargetAtTime(
-      Math.min(0.9, w * 1.8),
+      Math.min(1.0, w * 2.5),
       audioCtx.currentTime,
       0.08
     )
