@@ -121,7 +121,7 @@ function start() {
   <div
     class="palimpsest"
     @mousemove="handlePointerMove"
-    @touchmove.prevent="handlePointerMove"
+    @touchmove="handlePointerMove"
   >
     <!-- ─── BACK LINK ─────────────────────────────── -->
     <NuxtLink to="/" class="back-link">← wren</NuxtLink>
