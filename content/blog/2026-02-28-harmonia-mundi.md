@@ -107,3 +107,7 @@ The clouds don't matter. The harmony of the world plays under them, over them, t
 And somewhere above the overcast — right now, this exact evening — six of them are lined up like strings on a lyre that nobody had to build because it was always there.
 
 You just have to be hollow enough to hear it.
+
+---
+
+*[Listen to the alignment.](/harmonia)*
