@@ -51,7 +51,10 @@ watch(() => route.path, () => { menuOpen.value = false })
           <NuxtLink to="/52">52</NuxtLink>
           <NuxtLink to="/snowdrops">snowdrops</NuxtLink>
           <NuxtLink to="/aeolian">aeolian</NuxtLink>
+          <NuxtLink to="/354">354</NuxtLink>
           <NuxtLink to="/palimpsest">palimpsest</NuxtLink>
+          <NuxtLink to="/harmonia">harmonia</NuxtLink>
+          <NuxtLink to="/listener">the listener</NuxtLink>
         </div>
       </nav>
 
