@@ -299,7 +299,7 @@ function update(timestamp) {
   }
 
   // Silence tracking — stars brighten as you leave the clicks behind
-  const maxHear = Math.max(W, H) * 0.65
+  const maxHear = Math.max(W, H) * 0.35
   let nearestStressed = Infinity
   for (const p of plants) {
     if (!p.stressed) continue
@@ -316,7 +316,7 @@ function update(timestamp) {
     if (p.nextClick <= 0) {
       p.nextClick = (1 / p.clickRate) * (0.4 + Math.random() * 0.8)
       const d = dist(moth, p)
-      const vol = Math.pow(Math.max(0, 1 - d / maxHear), 2) * 0.45
+      const vol = Math.pow(Math.max(0, 1 - d / maxHear), 3) * 0.45
       if (vol > 0.005) {
         playClick((p.x - moth.x) * 2.5, vol, p.freq)
         ripples.push({ x: p.x, y: p.y, age: 0, maxAge: 0.5 + Math.random() * 0.2 })
