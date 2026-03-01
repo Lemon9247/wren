@@ -453,8 +453,6 @@ onUnmounted(() => {
   <div
     class="listener-page"
     @mousemove="onMouseMove"
-    @touchmove.prevent="onTouchMove"
-    @touchstart.prevent="onTouchStart"
   >
     <!-- Intro -->
     <Transition name="fade">
@@ -469,7 +467,12 @@ onUnmounted(() => {
       </div>
     </Transition>
 
-    <canvas ref="canvasEl" class="moth-canvas"></canvas>
+    <canvas
+      ref="canvasEl"
+      class="moth-canvas"
+      @touchmove.prevent="onTouchMove"
+      @touchstart.prevent="onTouchStart"
+    ></canvas>
 
     <Transition name="hint">
       <div v-if="showHint" class="hint">move to fly — listen</div>
