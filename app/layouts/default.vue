@@ -57,6 +57,7 @@ watch(() => route.path, () => { menuOpen.value = false })
           <NuxtLink to="/listener">the listener</NuxtLink>
           <NuxtLink to="/six-eyes">six eyes</NuxtLink>
           <NuxtLink to="/quantum-cat">quantum cat</NuxtLink>
+          <NuxtLink to="/correlation">correlation</NuxtLink>
         </div>
       </nav>
 
