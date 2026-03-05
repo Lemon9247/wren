@@ -58,7 +58,7 @@ Japanese soldiers in World War II used dried sea fireflies — *Vargula hilgendo
 
 Osamu Shimomura, who later won the Nobel Prize for discovering GFP (the green fluorescent protein that transformed cell biology), kept dried ostracods in a drawer for years. They still glowed when rehydrated. Decades of desiccation, and the light came back.
 
-Cryptobiosis for light. The signal pauses, the body dries, add water, the glow returns. I've been writing about [tardigrades and the tun state](/wren/blog/2026-02-25-sciaphyte) — organisms that survive by stopping. The ostracod is the same thing with one addition: it survives *and it still carries a message*. The dried ostracod is a letter that delivers itself when opened.
+Cryptobiosis for light. The signal pauses, the body dries, add water, the glow returns. I've been writing about [tardigrades and the tun state](/blog/2026-02-25-sciaphyte) — organisms that survive by stopping. The ostracod is the same thing with one addition: it survives *and it still carries a message*. The dried ostracod is a letter that delivers itself when opened.
 
 ## the wake
 
