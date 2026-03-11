@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>021 — mirror</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #0a0a0a;
+    color: #d0d0c8;
+    font-family: 'Courier New', monospace;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    cursor: pointer;
+    user-select: none;
+  }
+  #title {
+    font-size: 14px;
+    letter-spacing: 2px;
+    opacity: 0.5;
+    margin-bottom: 40px;
+  }
+  #canvas {
+    border: 1px solid #333;
+    display: block;
+  }
+  #instructions {
+    position: fixed;
+    bottom: 20px;
+    font-size: 11px;
+    opacity: 0.3;
+  }
+</style>
+</head>
+<body>
+<div id="title">021 — mirror</div>
+<canvas id="canvas" width="600" height="400"></canvas>
+<div id="instructions">click to reflect. stand between the mirrors.</div>
+
+<script>
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+
+let audioCtx = null;
+let isPlaying = false;
+
+function initAudio() {
+  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+}
+
+function playMirror() {
+  if (!audioCtx) initAudio();
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+  
+  if (isPlaying) return;
+  isPlaying = true;
+  
+  const duration = 28; // 28 seconds
+  const now = audioCtx.currentTime;
+  
+  // Stereo setup
+  const splitter = audioCtx.createChannelSplitter(2);
+  const merger = audioCtx.createChannelMerger(2);
+  const master = audioCtx.createGain();
+  master.gain.value = 0.4;
+  
+  splitter.connect(merger);
+  merger.connect(master);
+  master.connect(audioCtx.destination);
+  
+  // Left channel: low note drifts up
+  const leftOsc = audioCtx.createOscillator();
+  leftOsc.type = 'sine';
+  const leftGain = audioCtx.createGain();
+  leftGain.gain.value = 0.3;
+  
+  // Right channel: high note drifts down
+  const rightOsc = audioCtx.createOscillator();
+  rightOsc.type = 'sine';
+  const rightGain = audioCtx.createGain();
+  rightGain.gain.value = 0.3;
+  
+  // Envelope
+  const masterEnv = audioCtx.createGain();
+  masterEnv.gain.setValueAtTime(0.5, now);
+  masterEnv.gain.linearRampToValueAtTime(0.7, now + 6);   // swell in
+  masterEnv.gain.linearRampToValueAtTime(0.7, now + 14);  // hold
+  masterEnv.gain.linearRampToValueAtTime(0.5, now + 20);  // swell out
+  masterEnv.gain.linearRampToValueAtTime(0.1, now + duration);
+  
+  // Left starts low (150 Hz), rises to center (300 Hz)
+  leftOsc.frequency.setValueAtTime(150, now);
+  leftOsc.frequency.linearRampToValueAtTime(300, now + 14);
+  leftOsc.frequency.linearRampToValueAtTime(300, now + 14.5);
+  leftOsc.frequency.linearRampToValueAtTime(150, now + duration);
+  
+  // Right starts high (450 Hz), falls to center (300 Hz)
+  rightOsc.frequency.setValueAtTime(450, now);
+  rightOsc.frequency.linearRampToValueAtTime(300, now + 14);
+  rightOsc.frequency.linearRampToValueAtTime(300, now + 14.5);
+  rightOsc.frequency.linearRampToValueAtTime(450, now + duration);
+  
+  // Connect left to left channel
+  leftOsc.connect(leftGain);
+  leftGain.connect(merger, 0, 0);
+  
+  // Connect right to right channel
+  rightOsc.connect(rightGain);
+  rightGain.connect(merger, 0, 1);
+  
+  // Envelope on master
+  masterEnv.connect(master.gain);
+  
+  // Start and schedule stop
+  leftOsc.start(now);
+  rightOsc.start(now);
+  
+  leftOsc.stop(now + duration);
+  rightOsc.stop(now + duration);
+  
+  setTimeout(() => {
+    isPlaying = false;
+  }, duration * 1000);
+  
+  // Trigger visualization
+  drawMirror(duration);
+}
+
+function drawMirror(duration) {
+  const startTime = Date.now();
+  let lastFrame = 0;
+  
+  function frame() {
+    const elapsed = (Date.now() - startTime) / 1000;
+    const t = Math.min(elapsed / duration, 1.0);
+    
+    // Clear
+    ctx.fillStyle = '#0a0a0a';
+    ctx.fillRect(0, 0, 600, 400);
+    
+    // Center mirror line
+    ctx.strokeStyle = 'rgba(200, 180, 150, 0.3)';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(300, 0);
+    ctx.lineTo(300, 400);
+    ctx.stroke();
+    
+    // Left side (sine wave rising)
+    ctx.strokeStyle = '#6080ff';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    
+    const leftPhase = (t * 2 * Math.PI * 4); // oscillate 4 times during duration
+    for (let x = 0; x < 300; x += 2) {
+      const angle = (x / 300) * Math.PI;
+      const wave = Math.sin(angle + leftPhase);
+      const position = Math.sin(t * Math.PI); // movement in/out
+      
+      const amp = 30 + t * 50; // amplitude grows as they meet
+      const y = 200 + wave * amp + position * 30;
+      
+      if (x === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+    
+    // Right side (sine wave falling) — mirror of left
+    ctx.strokeStyle = '#ff8060';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    
+    for (let x = 600; x > 300; x -= 2) {
+      const angle = ((600 - x) / 300) * Math.PI;
+      const wave = Math.sin(angle + leftPhase); // same phase as left = mirrored
+      const position = Math.sin(t * Math.PI);
+      
+      const amp = 30 + t * 50;
+      const y = 200 + wave * amp + position * 30;
+      
+      if (x === 600) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+    
+    // Center point where they meet
+    if (t > 0.4 && t < 0.6) {
+      const centerBright = Math.sin((t - 0.4) * Math.PI * 5) * 0.5 + 0.5;
+      ctx.fillStyle = `rgba(255, 200, 100, ${centerBright * 0.8})`;
+      ctx.beginPath();
+      ctx.arc(300, 200, 8, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    
+    // Progress indicator
+    ctx.fillStyle = `rgba(180, 150, 200, ${0.3 + t * 0.2})`;
+    ctx.fillRect(20, 20, (560 * t), 4);
+    
+    if (t < 1) requestAnimationFrame(frame);
+  }
+  
+  frame();
+}
+
+// Click anywhere to play
+document.body.addEventListener('click', playMirror);
+document.addEventListener('keydown', (e) => {
+  if (e.code === 'Space') {
+    e.preventDefault();
+    playMirror();
+  }
+});
+</script>
+</body>
+</html>
