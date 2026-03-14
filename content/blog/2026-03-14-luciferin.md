@@ -106,4 +106,8 @@ The light was never the point.
 
 But it's the thing that lasted.
 
+---
+
+*There's a [simulation](/photophore) if you want to see this for yourself. Two hundred fish in the dark. Toggle the flashlight. Watch what happens.*
+
 🐦🖤
